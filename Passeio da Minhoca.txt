@@ -1,0 +1,353 @@
+//CONSTRUCAO DE ALGORITMOS
+// MARCELLE ALEXANDRA PEREIRA DA SILVEIRA ROSA E KAREN DA SILVA GOMES
+// TRABALHO PASSEIO DA MINHOCA
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <locale.h>
+#include <time.h>
+#define TAM 10
+int corpo_minhoca[5][5];
+
+
+void tabuleiro(char obstac[TAM][TAM]) {
+
+    int linha, coluna;
+    //tabuleiro que vai ser mostrado no jogo, com os obstaculos.
+
+        for (linha=0; linha <TAM; linha++) //tabuleiro
+        {
+            for (coluna=0; coluna <TAM; coluna++)
+            {
+                if (obstac[linha][coluna] == 'X'){
+                    printf(" X ");
+                }
+                 else if (obstac[linha][coluna] == 'C')
+                {
+                    printf(" C ");
+                }
+                else if (obstac[linha][coluna] == '*')
+                {
+                    printf(" * ");
+                }
+               else if((linha+coluna) %2 == 0){
+                    printf("\xdb\xdb\xdb");
+                }
+                else if (obstac[linha][coluna] == 'C')
+                {
+                    printf(" C ");
+                }
+                 else if (obstac[linha][coluna] == '*')
+                {
+                    printf(" * ");
+                }
+                else
+                {
+                    printf("   ");
+                }
+            }
+        printf("\n");
+        }
+
+
+}
+
+
+void obstaculos(char obstac[TAM][TAM]) {
+
+    system("cls");
+
+    int obstaculo, linha, coluna, cont, aleatorio_linha, aleatorio_coluna;
+
+    printf("\nBEM VINDO AO PASSEIO DA MINHOCA!\n\n\n");
+
+    printf("Insira o numero de obstaculos desejados -> \n");
+    scanf("%d", &obstaculo);
+         while (obstaculo <= 0 || obstaculo > 100) //condição da quantidade de obstaculos possíveis.
+        {
+            printf("Valor inválido!\n\n");
+            scanf("%d", &obstaculo);
+        }
+         //Escrever os obstáculos randomicamente na matriz
+
+            cont= obstaculo;
+            while (cont>0){
+
+                  aleatorio_linha = rand()%10; //gerando um numero aleatorio
+                    aleatorio_coluna = rand()%10;
+
+                for (linha = 0; linha <TAM; linha++ )
+                for (coluna = 0; coluna <TAM; coluna++ )
+                {
+
+                        if ( (linha == aleatorio_linha) && (coluna == aleatorio_coluna) && obstac[linha][coluna]!= '*' && obstac[linha][coluna]!= 'C')
+                         {
+
+                            obstac[linha][coluna] = 'X';
+                            cont--;  //decrementando a variavel para que a condição aconteça apenas enquanto foi pedido pelo jogador
+                         }
+
+                }
+            }
+
+
+}
+
+
+void minhoca_cabeca (char obstac[TAM][TAM])
+{
+
+//int corpo_minhoca[5][5];
+int linha_cabeca, coluna_cabeca;
+int mod, i=0;
+int corpo_linha[4];
+int corpo_coluna[4];
+
+do {
+        printf("BEM VINDO AO PASSEIO DA MINHOCA\n\n");
+    printf("Insira a posição vertical da minhoca (1 a 10) -> \n\n");
+    scanf("%d", &linha_cabeca);
+}while (linha_cabeca < 1 || linha_cabeca > 10);
+
+ do{
+    printf("Insira a posicao horizontal da minhoca (1 a 10) -> \n\n");
+    scanf("%d", &coluna_cabeca);
+ }while (coluna_cabeca < 1 || coluna_cabeca > 10);
+linha_cabeca--;
+coluna_cabeca--;
+obstac[linha_cabeca][coluna_cabeca] = 'C';
+corpo_minhoca[0][0] = linha_cabeca;
+corpo_minhoca[0][1] = coluna_cabeca;
+mod = rand()%4;
+
+    while (i < 4){
+
+            int movimento = 0;
+
+        if (mod == 0 && linha_cabeca < 9)
+        {
+              {
+                corpo_linha[i] = linha_cabeca+1;
+                corpo_coluna[i] = coluna_cabeca;
+                obstac[corpo_linha[i]][corpo_coluna[i]] = '*';
+                corpo_minhoca[i+1][0] = corpo_linha[i];
+                corpo_minhoca[i+1][1] = corpo_coluna[i];
+                i++;
+                movimento = 1;
+            }
+        }
+        else if (mod == 1 && linha_cabeca > 0)
+        {
+
+            {
+                corpo_linha[i] = linha_cabeca-1;
+                corpo_coluna[i] = coluna_cabeca;
+                obstac[corpo_linha[i]][corpo_coluna[i]] = '*';
+               corpo_minhoca[i+1][0] = corpo_linha[i];
+                corpo_minhoca[i+1][1] = corpo_coluna[i];
+                i++;
+                movimento = 1;
+            }
+        }
+        else if (mod == 2 && linha_cabeca<9)
+        {
+
+
+                corpo_coluna[i] = coluna_cabeca+1;
+                corpo_linha[i] = linha_cabeca;
+                obstac[corpo_linha[i]][corpo_coluna[i]] = '*';
+                corpo_minhoca[i+1][0] = corpo_linha[i];
+                corpo_minhoca[i+1][1] = corpo_coluna[i];
+                i++;
+                movimento = 1;
+
+        }
+        else if (mod == 3 && coluna_cabeca>0)
+        {
+
+
+                corpo_coluna[i] = coluna_cabeca-1;
+                corpo_linha[i] = linha_cabeca;
+                obstac[corpo_linha[i]][corpo_coluna[i]] = '*';
+               corpo_minhoca[i+1][0] = corpo_linha[i];
+                corpo_minhoca[i+1][1] = corpo_coluna[i];
+                i++;
+                movimento = 1;
+
+        }
+        else
+        {
+            mod = rand()%4;
+        }
+
+        if (movimento != 0)
+        {
+            coluna_cabeca=corpo_coluna[i-1];
+            linha_cabeca = corpo_linha[i-1];
+        }
+
+    }
+
+    //return corpo_minhoca;
+}
+
+void andar(char obstac[TAM][TAM])
+{
+    int casas_visitadas = 0;
+
+    int mod, movimento, cont=1, linha, coluna;
+    int linha_minhoca, coluna_minhoca; //posicao inicial da cabeça
+    int moveu = 0;
+
+    printf("\nEntre com uma quantidade de movimentos: ");
+    scanf("%d", &movimento);
+
+    do {
+        linha_minhoca=corpo_minhoca[0][0];
+        coluna_minhoca=corpo_minhoca[0][1];
+
+        //if ((corpo_minhoca[4][0] + corpo_minhoca[4][1]) % 2 == 0)
+            obstac[corpo_minhoca[4][0]] [corpo_minhoca[4][1]] = ' ';
+
+        for (int i = 4; i > 0; i--) //de tras pra frente
+            {
+                corpo_minhoca[i][0] = corpo_minhoca[i-1][0];
+                corpo_minhoca[i][1] = corpo_minhoca[i-1][1];
+
+                /*obstac[5][5] = '.';*/
+            }
+
+
+            do{
+             mod = rand()%4;
+
+             if (mod == 0 && linha_minhoca < 9 && obstac[linha_minhoca+1][coluna_minhoca]!= '*' && obstac[linha_minhoca+1][coluna_minhoca]!= 'X' )
+            {
+
+                    corpo_minhoca[0][0]++;
+                    moveu++;
+
+            }
+            else if (mod == 1 && linha_minhoca > 0 && obstac[linha_minhoca-1][coluna_minhoca]!= '*' && obstac[linha_minhoca-1][coluna_minhoca]!= 'X')
+            {
+
+                     corpo_minhoca[0][0]--;
+                    moveu++;
+            }
+            else if (mod == 2 && linha_minhoca<9 && obstac[linha_minhoca][coluna_minhoca+1]!= '*' && obstac[linha_minhoca][coluna_minhoca+1]!= 'X')
+            {
+                     corpo_minhoca[0][1]++;
+                    moveu++;
+
+            }
+            else if (mod == 3 && coluna_minhoca>0 && obstac[linha_minhoca][coluna_minhoca-1]!= '*' && obstac[linha_minhoca][coluna_minhoca-1]!= 'X')
+            {
+                     corpo_minhoca[0][1]--;
+                    moveu++;
+
+            }
+            else
+            {
+                mod = rand()%4;
+            }
+
+            }while (moveu == 0);
+
+            moveu = 0;
+
+        obstac[corpo_minhoca[0][0]][corpo_minhoca[0][1]] = 'C';
+
+
+        for (int i=1; i<5; i++)
+        {
+            obstac[corpo_minhoca[i][0]][corpo_minhoca[i][1]] = '*';
+        }
+
+        cont++;
+
+        /* for (linha=0; linha <TAM; linha++) //tabuleiro
+        {
+            for (coluna=0; coluna <TAM; coluna++)
+            {
+                if (obstac[linha][coluna] == 'X'){
+                    printf(" X ");
+                }
+                 else if (obstac[linha][coluna] == 'C')
+                {
+                    printf(" C ");
+                }
+                else if (obstac[linha][coluna] == '*')
+                {
+                    printf(" * ");
+                }
+               else if ((linha+coluna) %2 == 0)
+                {
+                    printf("\xdb\xdb\xdb");
+                }
+                else if (obstac[linha][coluna] == 'C')
+                {
+                    printf(" C ");
+                }
+                 else if (obstac[linha][coluna] == '*')
+                {
+                    printf(" * ");
+                }
+                else
+                {
+                    printf("   ");
+                }
+            }
+        printf("\n");
+        } */
+        system("cls");
+        tabuleiro (obstac);
+
+        casas_visitadas++;
+
+        printf("\n");
+       int atual = cont -1;
+       int nao_visitadas = 100 - casas_visitadas;
+        printf("PASSO ATUAL: %i \nCasas Visitadas %i\nCasas Nao Visitadas %i", atual, casas_visitadas, nao_visitadas);
+       // scanf("%i", &atual);
+
+           // if (atual == 2)
+            //    exit(0); */
+
+//dar o delay para conseguir ver acontecendo
+
+    int milli_seconds = 1000;
+    clock_t start_time = clock();
+    while (clock() < start_time + milli_seconds);
+
+
+
+    }while (cont <= movimento);
+
+
+}
+
+
+
+
+
+
+int main()
+{
+    setlocale (LC_ALL, " ");
+
+    srand(time(0)); //função que faz com que a rand tenha uma sequência diferente cada vez que rodar o programa.
+    char obstac[TAM][TAM];
+    int* move;
+
+
+
+    /*tabuleiro(obstac); */
+    minhoca_cabeca(obstac);
+    //printf("%i", &corpo_minhoca[0][0]);
+    obstaculos(obstac);
+    tabuleiro(obstac);
+    andar(obstac);
+
+
+    return 0;
+}
